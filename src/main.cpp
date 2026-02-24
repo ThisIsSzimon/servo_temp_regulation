@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include "modbus_hdl.h"
 #include "web_srv.h"
+#include "servo_ctl.h"
 
 const char* ssid = "Szymon Komputer";
 const char* password = "70wf-lrta-dfna";
@@ -23,15 +24,17 @@ void setup() {
 
     setupModbus();
     setupWebServer();
+    setupServo();
 }
 
 void loop() {
     if (millis() - lastUpdate > 2000) {
         float t = readTemperature();
         if (t > -100.0) {
-            Serial.printf("Odczyt: %.1f C\n", t);
             updateTemperatureHMI(t);
         }
         lastUpdate = millis();
     }
+
+    handleServoSerial();
 }
