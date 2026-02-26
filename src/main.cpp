@@ -8,6 +8,7 @@ const char* ssid = "Szymon Komputer";
 const char* password = "70wf-lrta-dfna";
 
 unsigned long lastUpdate = 0;
+float currentTemperature = 0;
 
 void setup() {
     Serial.begin(115200);
@@ -28,13 +29,17 @@ void setup() {
 }
 
 void loop() {
+
     if (millis() - lastUpdate > 2000) {
         float t = readTemperature();
         if (t > -100.0) {
+            currentTemperature = t;
             updateTemperatureHMI(t);
+            setAutoTarget(t);
         }
         lastUpdate = millis();
     }
 
     handleServoSerial();
+    updateServo();
 }
